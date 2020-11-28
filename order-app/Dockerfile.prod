@@ -1,0 +1,20 @@
+FROM golang:1.15-buster as builder
+
+WORKDIR /work
+
+ENV GO111MODULE="on"
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY . ./
+
+RUN CGO_ENABLED=0 GOOS=linux go build -o bin
+
+FROM alpine:3.8
+
+WORKDIR /root/
+
+# Multi stage build function of Docker
+COPY --from=builder /work/bin .
+
+CMD ["./bin"]
