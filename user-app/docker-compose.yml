@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  user-app-dev:
+    container_name: 'user-app'
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - '.:/work'
+    ports:
+      - '3000:3000'
+      - '9000:9000'
+    links:
+      - user-mysql-dev
+    networks:
+      - local
+    command: 'bash -c "go build -o bin ; ./bin"'
+  user-mysql-dev:
+    container_name: 'user-db'
+    image: 'mysql'
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_CHARSET: utf8
+      MYSQL_USER: mysql
+      MYSQL_PASSWORD: mysql
+      MYSQL_ROOT_PASSWORD: mysql
+      TZ: 'Asia/Tokyo'
+    volumes:
+      - './mysql/init:/docker-entrypoint-initdb.d'
+      - 'mysql:/var/lib/mysql'
+    networks:
+      - local
+
+volumes:
+  mysql:
+    driver: 'local'
+
+networks:
+  local:
+    external: true
