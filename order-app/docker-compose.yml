@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  order-app-dev:
+    container_name: 'order-app'
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - '.:/work'
+    ports:
+      - '3003:3000'
+      - '9003:9000'
+    links:
+      - order-mysql-dev
+    networks:
+      - local
+    command: 'bash -c "go build -o bin ; ./bin"'
+  order-mysql-dev:
+    container_name: 'order-db'
+    image: 'mysql'
+    ports:
+      - '3309:3306'
+    environment:
+      MYSQL_CHARSET: utf8
+      MYSQL_USER: mysql
+      MYSQL_PASSWORD: mysql
+      MYSQL_ROOT_PASSWORD: mysql
+      TZ: 'Asia/Tokyo'
+    volumes:
+      - './mysql/init:/docker-entrypoint-initdb.d'
+      - 'mysql:/var/lib/mysql'
+    networks:
+      - local
+
+volumes:
+  mysql:
+    driver: 'local'
+
+networks:
+  local:
+    external: true
