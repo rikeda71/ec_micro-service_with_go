@@ -6,6 +6,7 @@ import (
 	"github.com/go-resty/resty/v2"
 	"github.com/labstack/echo"
 	"github.com/s14t284/ec_micro-service_with_go/infra"
+	"github.com/s14t284/ec_micro-service_with_go/mq"
 	"net/http"
 )
 
@@ -58,6 +59,11 @@ func CreateOrderItemHandler(c echo.Context) error {
 	order := infra.Order{UserId: user.UserId, OrderDetails: details.OrderDetails}
 	infra.DB.Create(&order)
 
+	jb, err := json.Marshal(user)
+	if err == nil {
+		mq.SendMessage("order-complete", jb)
+	}
+
 	return c.JSON(200, order)
 }
 
@@ -102,3 +108,4 @@ func validateJwtToken(req *http.Request) (*User, error) {
 	fmt.Println(user)
 	return user, nil
 }
+
