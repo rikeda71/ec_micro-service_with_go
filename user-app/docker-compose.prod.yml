@@ -1,22 +1,21 @@
 version: '3'
 
 services:
-  user-app-dev:
+  user-app:
     container_name: 'user-app'
     build:
       context: ./
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.prod
     volumes:
-      - '.:/work'
+      - '.:/go'
     ports:
       - '3000:3000'
       - '9000:9000'
     links:
-      - user-mysql-dev
+      - user-mysql
     networks:
       - local
-    command: 'bash -c "go build -o bin ; ./bin"'
-  user-mysql-dev:
+  user-mysql:
     container_name: 'user-db'
     image: 'mysql'
     ports:
