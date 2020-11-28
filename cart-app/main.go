@@ -5,6 +5,7 @@ import (
 	"github.com/labstack/echo/middleware"
 	h "github.com/s14t284/ec_micro-service_with_go/handler"
 	"github.com/s14t284/ec_micro-service_with_go/infra"
+	"github.com/s14t284/ec_micro-service_with_go/mq"
 )
 
 func launchRestApi() {
@@ -21,5 +22,7 @@ func launchRestApi() {
 
 func main() {
 	infra.GormConnect()
+	// receive message
+	go mq.ReceiveMessage()
 	launchRestApi()
 }
