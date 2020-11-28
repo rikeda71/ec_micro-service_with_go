@@ -27,4 +27,8 @@ func GormConnect() {
 		_ = Migrator.CreateTable(Order{})
 	}
 	_ = DB.AutoMigrate(&Order{})
+	if !Migrator.HasTable(OrderDetail{}) {
+		_ = Migrator.CreateTable(OrderDetail{})
+	}
+	_ = DB.AutoMigrate(&OrderDetail{})
 }

@@ -12,6 +12,8 @@ func launchRestApi() {
 	// CORS
 	e.Use(middleware.CORS())
 	e.GET("/", h.IndexHandler)
+	e.POST("/order", h.CreateOrderItemHandler)
+	e.GET("/orders", h.GetAllOrderItemHandler)
 	_ = e.Start(":3000")
 }
 
