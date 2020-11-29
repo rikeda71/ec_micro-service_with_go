@@ -1,18 +1,12 @@
-import React, { FormEvent, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Cookies from 'js-cookie';
 
 const Form = styled.form`
-  :scope form {
-    display: inline;
-  }
+  display: inline;
 `;
 
-export const Login: React.FC = () => {
-  //-------------------------
-  // プロパティ
-  //-------------------------
-  const [isLogin, setIsLogin] = useState(false);
+export const Login: React.FC<{ isLogin: boolean; setIsLogin: Function }> = (props) => {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
@@ -23,9 +17,7 @@ export const Login: React.FC = () => {
   const handlePasswordChange = (e: React.FormEvent<HTMLInputElement>) => {
     setPassword(e.currentTarget.value);
   };
-  //-------------------------
-  // ユーザ情報取得リクエスト
-  //-------------------------
+
   const fetchUserInfo = (token: string) => {
     const method = 'GET';
     const headers = {
@@ -39,17 +31,15 @@ export const Login: React.FC = () => {
       })
       .then(function (json) {
         if (json.email) {
-          setIsLogin(true);
+          props.setIsLogin(true);
           setEmail(json.email);
         }
       });
   };
-  //-------------------------
-  // ログアウトリクエスト
-  //-------------------------
+
   const logout = (e: React.FormEvent<HTMLFormElement>) => {
     Cookies.remove('token'); // クッキー削除
-    setIsLogin(false);
+    props.setIsLogin(false);
   };
   //-------------------------
   // ログインリクエスト
@@ -69,16 +59,12 @@ export const Login: React.FC = () => {
       .then(function (json) {
         if (json.token) {
           Cookies.set('token', json.token);
-          setIsLogin(true);
+          props.setIsLogin(true);
           fetchUserInfo(json.token);
         }
       });
   };
 
-  // UIコンポーネントロジック
-  //-------------------------
-  // トークンチェック
-  //-------------------------
   const token = Cookies.get('token');
   if (token) {
     fetchUserInfo(token);
@@ -86,7 +72,7 @@ export const Login: React.FC = () => {
 
   return (
     <div>
-      {!isLogin && (
+      {!props.isLogin && (
         <Form onSubmit={login}>
           <input type="text" value={userName} onChange={handleUserNameChange} />
           <input type="text" value={password} onChange={handlePasswordChange} />
@@ -95,7 +81,7 @@ export const Login: React.FC = () => {
           </button>
         </Form>
       )}
-      {isLogin && (
+      {props.isLogin && (
         <div>
           <strong>ようこそ！{email}さん</strong>
           <Form onSubmit={logout}>
