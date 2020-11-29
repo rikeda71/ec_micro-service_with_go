@@ -1,0 +1,47 @@
+{
+  "name": "microserviceecwithgo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "config/webpack.config.js",
+  "scripts": {
+    "start": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --content-base src --mode development",
+    "build": "webpack --mode production",
+    "lint": "eslint src/index.tsx",
+    "lint:fix": "eslint --fix src/index.tsx",
+    "storybook": "start-storybook -p 4000"
+  },
+  "author": "Ryuya Ikeda(@s14t284)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/s14t284/ec_micro-service_with_go.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/s14t284/ec_micro-service_with_go/issues"
+  },
+  "homepage": "https://github.com/s14t284/ec_micro-service_with_go#readme",
+  "devDependencies": {
+    "@babel/core": "^7.12.9",
+    "@babel/polyfill": "^7.12.1",
+    "@babel/preset-react": "^7.12.7",
+    "@babel/preset-typescript": "^7.12.7",
+    "@types/js-cookie": "^2.2.6",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "@types/styled-components": "^5.1.4",
+    "babel-loader": "^8.2.2",
+    "babel-polyfill": "^6.26.0",
+    "eslint": "^7.14.0",
+    "eslint-plugin-react": "^7.21.5",
+    "js-cookie": "^2.2.1",
+    "prettier": "^2.2.1",
+    "prettier-eslint": "^12.0.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "styled-components": "^5.2.1",
+    "typescript": "^4.1.2",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.11.0"
+  }
+}

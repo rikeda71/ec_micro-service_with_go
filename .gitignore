@@ -28,3 +28,4 @@
 .vscode/
 bin
 vendor/
+node_modules/
