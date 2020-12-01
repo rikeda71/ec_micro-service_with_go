@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Cookies from 'js-cookie';
-import Jsona, { SwitchCaseJsonMapper } from 'jsona';
 
-interface IProduct {
+export interface IProduct {
   product_id: number;
   product_name: string;
   product_image: string;
@@ -11,16 +10,13 @@ interface IProduct {
 }
 
 const ProductsStyle = styled.div`
-     em {
+  em {
     font-size: 1rem;
     color: #f00;
   }
 `;
 
-export const Products: React.FC<{ isLogin: boolean }> = (props) => {
-  const [products, setProducts] = useState<Array<IProduct>>([]);
-
-  //------------------------- // 商品一覧取得リクエスト //-------------------------
+export const Products: React.FC<{ isLogin: boolean; products: Array<IProduct>; setProducts: Function }> = (props) => {
   const fetchCarts = () => {
     const method = 'GET';
     const headers = { Accept: 'application/json' };
@@ -30,7 +26,7 @@ export const Products: React.FC<{ isLogin: boolean }> = (props) => {
       })
       .then(function (json) {
         if (json) {
-          setProducts(json);
+          props.setProducts(json);
         }
       });
   };
@@ -42,7 +38,7 @@ export const Products: React.FC<{ isLogin: boolean }> = (props) => {
       <table width="600">
         <tr>
           <td>
-            {products.map((p) => (
+            {props.products.map((p) => (
               <Product product={p} isLogin={props.isLogin} />
             ))}
           </td>
@@ -53,7 +49,7 @@ export const Products: React.FC<{ isLogin: boolean }> = (props) => {
 };
 
 const Product: React.FC<{ product: IProduct; isLogin: boolean }> = (props) => {
-  const cartIn = (e) => {
+  const cartIn = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     const token = Cookies.get('token');
     if (token) {
       const method = 'POST';
