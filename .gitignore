@@ -28,3 +28,5 @@
 .vscode/
 bin
 vendor/
+node_modules/
+index.min.js

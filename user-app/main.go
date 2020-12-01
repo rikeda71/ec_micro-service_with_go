@@ -13,7 +13,9 @@ import (
 func launchRestApi() {
 	e := echo.New()
 	// CORS
-	e.Use(middleware.CORS())
+	e.Use(middleware.CORSWithConfig(
+		middleware.CORSConfig{AllowOrigins: []string{"http://localhost"}},
+	))
 	e.GET("/", h.IndexHandler)
 	e.POST("/login", h.LoginHandler)
 	e.POST("/user", h.CreateUserHandler)
