@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Cookies from 'js-cookie';
 
@@ -9,6 +9,14 @@ export interface IProduct {
   product_price: number;
 }
 
+interface IProps {
+  isLogin: boolean;
+  products: Array<IProduct>;
+  setProducts: Function;
+  cartNum: number;
+  setCartNum: Function;
+}
+
 const ProductsStyle = styled.div`
   em {
     font-size: 1rem;
@@ -16,21 +24,24 @@ const ProductsStyle = styled.div`
   }
 `;
 
-export const Products: React.FC<{ isLogin: boolean; products: Array<IProduct>; setProducts: Function }> = (props) => {
-  const fetchCarts = () => {
-    const method = 'GET';
-    const headers = { Accept: 'application/json' };
-    fetch('http://localhost:3001/products', { method, headers })
-      .then(function (resp) {
-        return resp.json();
-      })
-      .then(function (json) {
-        if (json) {
-          props.setProducts(json);
-        }
-      });
-  };
-  fetchCarts();
+export const Products: React.FC<IProps> = (props) => {
+  useEffect(() => {
+    const fetchProduct = async () => {
+      const method = 'GET';
+      const headers = { Accept: 'application/json' };
+      await fetch('http://localhost:3001/products', { method, headers })
+        .then(function (resp) {
+          return resp.json();
+        })
+        .then(function (json) {
+          if (json) {
+            console.log(json);
+            props.setProducts(json);
+          }
+        });
+    };
+    fetchProduct();
+  }, []);
 
   return (
     <ProductsStyle>
@@ -39,7 +50,7 @@ export const Products: React.FC<{ isLogin: boolean; products: Array<IProduct>; s
         <tr>
           <td>
             {props.products.map((p) => (
-              <Product product={p} isLogin={props.isLogin} />
+              <Product product={p} isLogin={props.isLogin} cartNum={props.cartNum} setCartNum={props.setCartNum} />
             ))}
           </td>
         </tr>
@@ -48,7 +59,7 @@ export const Products: React.FC<{ isLogin: boolean; products: Array<IProduct>; s
   );
 };
 
-const Product: React.FC<{ product: IProduct; isLogin: boolean }> = (props) => {
+const Product: React.FC<{ product: IProduct; isLogin: boolean; cartNum: number; setCartNum: Function }> = (props) => {
   const cartIn = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     const token = Cookies.get('token');
     if (token) {
@@ -59,15 +70,19 @@ const Product: React.FC<{ product: IProduct; isLogin: boolean }> = (props) => {
         Authorization: 'Bearer ' + token,
       };
       const body = `product_id=${props.product.product_id}`;
-      fetch('http://localhost:3002/cart', { method, headers, body })
-        .then(function (resp) {
-          return resp.json();
-        })
-        .then(function (json) {
-          if (json) {
-            console.log(json);
-          }
-        });
+      const callFetch = async () => {
+        await fetch('http://localhost:3002/cart', { method, headers, body })
+          .then(function (resp) {
+            return resp.json();
+          })
+          .then(function (json) {
+            if (json) {
+              console.log(json);
+              props.setCartNum(props.cartNum + 1);
+            }
+          });
+      };
+      callFetch();
     }
   };
 
