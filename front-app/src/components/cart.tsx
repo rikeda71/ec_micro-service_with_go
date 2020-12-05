@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Cookies from 'js-cookie';
 import { IProduct } from './products';
+import { IOrderDetail } from './order';
 
 interface ICart {
   product_id: number;
@@ -64,17 +65,21 @@ export const Cart: React.FC<IProps> = (props) => {
     const func = async () => {
       const method = 'POST';
       const headers = {
-        Accept: 'application/json',
-        'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+        'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token,
       };
-      const body = JSON.stringify({ order_details: carts });
+      const orderDetails: Array<IOrderDetail> = [];
+      for (let i = 0; i < carts.length; i++) {
+        orderDetails.push({ order_id: i + 1, product_id: carts[i].product_id, product_price: carts[i].product_price });
+      }
+      const body = JSON.stringify({ order_details: orderDetails });
       await fetch('http://localhost:3003/order', { method, headers, body })
         .then(function (resp) {
           return resp.json();
         })
         .then(function (json) {
           if (json) {
+            console.log(json);
             deleteCartItems();
             props.setCartNum(0);
           }
