@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import ReactDom from 'react-dom';
 import { Cart } from './components/cart';
 import { Login } from './components/login';
-import { IProduct, Products } from './components/products';
+import { Order } from './components/order';
+import { Products } from './components/products';
 
 const App: React.FC = () => {
   const [isLogin, setIsLogin] = useState(false);
@@ -20,6 +21,7 @@ const App: React.FC = () => {
         setCartNum={setCartNum}
       />
       {isLogin && <Cart products={products} cartNum={cartNum} setCartNum={setCartNum} />}
+      {isLogin && <Order cartNum={cartNum} />}
     </React.Fragment>
   );
 };
