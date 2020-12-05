@@ -22,3 +22,15 @@ Docker and docker-compose are required
 ./run.sh  # runnning application servers
 ./down.sh # down applications
 ```
+
+## Directory Structure
+
+```bash
+.
+├── cart-app    # Shopping Cart
+├── front-app   # Frontend Application
+├── message-app # Message Q for Connecting Applications
+├── order-app   # Order Histories
+├── product-app # Product List
+└── user-app    # Management User and Authentication
+```
