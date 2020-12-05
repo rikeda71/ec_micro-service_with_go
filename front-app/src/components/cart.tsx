@@ -73,7 +73,6 @@ export const Cart: React.FC<IProps> = (props) => {
         orderDetails.push({ order_id: i + 1, product_id: carts[i].product_id, product_price: carts[i].product_price });
       }
       const body = JSON.stringify({ order_details: orderDetails });
-      console.log(body);
       await fetch('http://localhost:3003/order', { method, headers, body })
         .then(function (resp) {
           return resp.json();
